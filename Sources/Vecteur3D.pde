@@ -9,11 +9,23 @@ class Vecteur3D {
     this.z = z;
   }
 
+  Vecteur3D() {
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
+  }
+
+  // Si besoin, on peut remettre cette version mais l'autre était plus pratique 
+  // // Addition
+  // void add(Vecteur3D v) {
+  //   x += v.x;
+  //   y += v.y;
+  //   z += v.z;
+  // }
+
   // Addition
-  void add(Vecteur3D v) {
-    x += v.x;
-    y += v.y;
-    z += v.z;
+  Vecteur3D add(Vecteur3D v) {
+    return new Vecteur3D(x + v.x, y + v.y, z + v.z);
   }
   
   // Soustraction
@@ -23,11 +35,17 @@ class Vecteur3D {
     z -= v.z;
   }
 
-  // Multiplication scalaire
-  void mult(float n) {
-    x *= n;
-    y *= n;
-    z *= n;
+  // Si besoin, on peut remettre cette version mais l'autre était plus pratique 
+  // // Multiplication scalaire
+  // void mult(float n) {
+  //   x *= n;
+  //   y *= n;
+  //   z *= n;
+  // }
+
+   // Multiplication scalaire
+  Vecteur3D mult(float n) {
+    return new Vecteur3D(x * n, y * n, z * n);
   }
   
   // Produit par composantes
