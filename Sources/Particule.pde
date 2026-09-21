@@ -40,10 +40,10 @@ class Particule {
     position = position.add(velocite.mult(temps));
   }
 
-  void integrer_velvet(float temps) {
+  void integrer_verlet(float temps) {
     Vecteur3D force = new Vecteur3D();
     Vecteur3D g = new Vecteur3D(0.0, 200.0, 0.0);
-    force = f.mult(masse);
+    force = g.mult(masse);
     
     acceleration = force.mult(inverse_masse);
     
