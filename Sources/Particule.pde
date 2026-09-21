@@ -2,6 +2,7 @@ class Particule {
   public color couleur;
   public int rayon;
   public Vecteur3D position;
+  public Vecteur3D position_precedente;
   public Vecteur3D velocite = new Vecteur3D();
   public Vecteur3D acceleration = new Vecteur3D();
   public float damping = 0.8;
@@ -40,7 +41,23 @@ class Particule {
   }
 
   void integrer_velvet(float temps) {
-    return;
+    Vecteur3D force = new Vecteur3D();
+    Vecteur3D g = new Vecteur3D(0.0, 200.0, 0.0);
+    force = f.mult(masse);
+    
+    acceleration = force.mult(inverse_masse);
+    
+    if (position_precedente == null){
+      position_precedente = position.add(velocite.mult(-temps));
+   
+    }
+    
+    Vecteur3D nouvelle_position = position.mult(2.0).add(position_precedente.mult(-1.0)).add(acceleration.mult(temps * temps));
+    
+    velocite = nouvelle_position.add(position_precedente.mult(-1.0)).mult(1.0 / (2.0 * temps));
+    
+    position_precedente = position;
+    position = nouvelle_position;
   }
 
   void draw() {
