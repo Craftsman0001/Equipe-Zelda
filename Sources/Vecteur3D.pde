@@ -56,12 +56,12 @@ class Vecteur3D {
   }
   
   // Produit scalaire
-  float produitScalaire(Vecteur3D v) {
+  float produit_scalaire(Vecteur3D v) {
     return (x * v.x) + (y * v.y) + (z * v.z);
   }
   
   // Produit vectoriel
-  Vecteur3D produitVectoriel(Vecteur3D v) {
+  Vecteur3D produit_vectoriel(Vecteur3D v) {
     float nx = (y * v.z) - (z * v.y);
     float ny = (z * v.x) - (x * v.z);
     float nz = (x * v.y) - (y * v.x);
@@ -70,13 +70,13 @@ class Vecteur3D {
   }
 
   // Norme au carree
-  float normeCarree() {
+  float norme_carree() {
     return (x * x) + (y * y) + (z * z);
   }
   
   // Norme
   float norme() {
-    return sqrt(normeCarree()); 
+    return sqrt(norme_carree()); 
   }
 
   // Rendre le vecteur unitaire
