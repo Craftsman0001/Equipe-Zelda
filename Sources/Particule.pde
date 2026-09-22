@@ -4,19 +4,31 @@ class Particule {
   public Vecteur3D position;
   public Vecteur3D position_precedente;
   public Vecteur3D velocite = new Vecteur3D();
-  public Vecteur3D acceleration = new Vecteur3D();
-  public float damping = 0.8;
-  public float masse;
+  public Vecteur3D acceleration;
+  public float damping;
 
-  protected float inverse_masse;
+  private float masse;
+  private float inverse_masse;
 
-  Particule(float x, float y, float z, int rayon, float masse) {
-    this.position = new Vecteur3D(x, y, z);
+  Particule(Vecteur3D position_initiale, int rayon, float masse, float damping, Vecteur3D velocite_initiale) {
+    this.position = position_initiale;
     this.rayon = rayon;
-    this.masse = masse;
-    set_inverse_masse(masse);
+    this.damping = damping;
+    this.velocite = velocite_initiale;
+    this.acceleration = new Vecteur3D();
 
+    set_masse(masse);
     couleur_aleatoire();
+  }
+
+  void set_masse(float nouvelle_masse) {
+    this.masse = nouvelle_masse;
+    
+    if (nouvelle_masse <= 0) {
+        this.inverse_masse = 0.0;
+    } else {
+        this.inverse_masse = 1.0 / nouvelle_masse;
+    }
   }
 
   void couleur_aleatoire() {
@@ -66,15 +78,11 @@ class Particule {
     circle(position.x, position.y, rayon);
   }
 
-  void set_inverse_masse(float masse) {
-    if (masse <= 0) {
-        this.inverse_masse = 0.0;
-    } else {
-        this.inverse_masse = 1/masse;
-    }
+  float get_masse() {
+    return this.masse;
   }
 
-  float get_inversse_masse() {
+  float get_inverse_masse() {
     return this.inverse_masse;
   }
 }
