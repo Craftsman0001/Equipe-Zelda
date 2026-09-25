@@ -75,10 +75,10 @@ void calculerDeltaTemps() {
 
 // Inputs
 void gererEntreesContinues() {
-  if (keyPressed) {
-    if (key == 'w' || key == 'W' || keyCode == UP)   angleCanon = min(angleCanon + 60*dt, 85);
-    if (key == 's' || key == 'S' || keyCode == DOWN) angleCanon = max(angleCanon - 60*dt, 5);
-  }
+  float dx = mouseX - positionCanon.x;
+  float dy = positionCanon.y - mouseY;
+  float angle = degrees(atan2(dy, dx));
+  angleCanon = constrain(angle, 5, 85);
 }
 
 void keyPressed() {
@@ -248,7 +248,7 @@ void dessinerUI() {
   text("Projectile [1-4] : " + nomsProjectiles[typeProjectileCourant]
      + "   (masse=" + massesProjectiles[typeProjectileCourant] + "kg, v0="
      + vitessesInit[typeProjectileCourant] + "px/s)", 15, 15);
-  text("Angle [W/S ou Haut/Bas] : " + nf(angleCanon, 0, 1) + "°", 15, 35);
+  text("Angle canon contrôlé par la souris : " + nf(angleCanon, 0, 1) + "°", 15, 35);
   text("Intégrateur [V] : " + (utiliserVerlet ? "Verlet" : "Euler"), 15, 55);
   text("dt : " + nf(dtAffiche * 1000, 0, 2) + " ms   |   FPS : " + nf(1.0/max(dtAffiche,0.0001), 0, 1), 15, 75);
   text("Clic gauche pour tirer   |   [R] Recommencer", 15, 95);
