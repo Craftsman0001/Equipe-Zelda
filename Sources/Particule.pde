@@ -6,6 +6,7 @@ class Particule {
   public Vecteur3D velocite = new Vecteur3D();
   public Vecteur3D acceleration;
   public float damping;
+  public Vecteur3D accumulateur_force = new Vecteur3D();
 
   private float masse;
   private float inverse_masse;
@@ -36,6 +37,14 @@ class Particule {
     float g = random(0, 255);
     float b = random(0, 255);
     this.couleur = color(r, g, b, 255);
+  }
+
+  void ajouter_force(Vecteur3D force) {
+    accumulateur_force = accumulateur_force.add(force);
+  }
+
+  void vider_accumulateur() {
+    accumulateur_force = new Vecteur3D();
   }
 
   void integrer_euler(float temps) {
