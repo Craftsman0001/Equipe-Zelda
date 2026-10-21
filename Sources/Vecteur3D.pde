@@ -15,6 +15,12 @@ class Vecteur3D {
     this.z = 0;
   }
 
+  Vecteur3D(Vecteur3D v) {
+    this.x = v.x;
+    this.y = v.y;
+    this.z = v.z;
+  }
+
   // Si besoin, on peut remettre cette version mais l'autre était plus pratique 
   // // Addition
   // void add(Vecteur3D v) {
@@ -28,11 +34,16 @@ class Vecteur3D {
     return new Vecteur3D(x + v.x, y + v.y, z + v.z);
   }
   
+  // // Soustraction
+  // void sub(Vecteur3D v) {
+  //   x -= v.x;
+  //   y -= v.y;
+  //   z -= v.z;
+  // }
+
   // Soustraction
-  void sub(Vecteur3D v) {
-    x -= v.x;
-    y -= v.y;
-    z -= v.z;
+  Vecteur3D sub(Vecteur3D v) {
+    return new Vecteur3D(x - v.x, y - v.y, z - v.z);
   }
 
   // Si besoin, on peut remettre cette version mais l'autre était plus pratique 
