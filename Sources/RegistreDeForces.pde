@@ -35,4 +35,13 @@ class RegistreDeForces {
       enregistrement.generateur.appliquer_force(enregistrement.particule, duree);
     }
   }
+
+  void afficher_ressorts() {
+  for (EnregistrementForce enregistrement : registre) {
+    if (enregistrement.generateur instanceof GenerateurRessort) {
+      GenerateurRessort ressort = (GenerateurRessort) enregistrement.generateur;
+      ressort.dessiner(enregistrement.particule);
+    }
+  }
+}
 }

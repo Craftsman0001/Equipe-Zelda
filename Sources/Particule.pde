@@ -48,14 +48,10 @@ class Particule {
   }
 
   void integrer_euler(float temps) {
-    Vecteur3D force = new Vecteur3D();
-    Vecteur3D g = new Vecteur3D(0.0, 200.0, 0.0);
-    force = g.mult(masse);
+    acceleration = accumulateur_force.mult(inverse_masse);
 
-    acceleration = force.mult(inverse_masse);
-
-    // v1 = v0 + a * dt avec damping sur v0
-    velocite = velocite.mult(pow(damping, temps)).add(acceleration.mult(temps));
+    // v1 = v0 + a * dt sans damping
+    velocite = velocite.add(acceleration.mult(temps));
 
     // p1 = p0 + v1 * dt
     position = position.add(velocite.mult(temps));
