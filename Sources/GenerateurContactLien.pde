@@ -1,4 +1,4 @@
-class GenerateurContactLien implements GenerateurContact {
+abstract class GenerateurContactLien implements GenerateurContact {
 
   Particule particule_a;
   Particule particule_b;

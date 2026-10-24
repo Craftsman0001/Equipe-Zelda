@@ -1,6 +1,6 @@
 // Rayon physique (draw() utilise circle(), donc rayon est un diamètre)
 float rayon_physique(Particule p) {
-  return p.rayon / 2.0;
+  return p.rayon;
 }
 
 class Contact {

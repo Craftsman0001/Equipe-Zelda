@@ -71,19 +71,19 @@ void setup() {
   registreForces.ajouter(particules.get(5), generateurGravite);
   registreForces.ajouter(particules.get(5), generateurFriction);
 
-  // tige : deux particules gardent une distance fixe
-  particules.add(new Particule(new Vecteur3D(600.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D()));
-  particules.add(new Particule(new Vecteur3D(660.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D()));
-  registreForces.ajouter(particules.get(5), generateurGravite);
+  // tige : deux particules gardent une distance fixe ("T1" et "T2")
+  particules.add(new Particule(new Vecteur3D(600.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "T1"));
+  particules.add(new Particule(new Vecteur3D(660.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "T2"));
   registreForces.ajouter(particules.get(6), generateurGravite);
-  generateursContact.add(new GenerateurContactTige(particules.get(5), particules.get(6), 60.0));
-
-  // câble : distance maximale entre deux particules
-  particules.add(new Particule(new Vecteur3D(800.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(-80.0, 0.0, 0.0)));
-  particules.add(new Particule(new Vecteur3D(900.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(80.0, 0.0, 0.0)));
   registreForces.ajouter(particules.get(7), generateurGravite);
+  generateursContact.add(new GenerateurContactTige(particules.get(6), particules.get(7), 60.0));
+
+  // câble : distance maximale entre deux particules ("C1" et "C2")
+  particules.add(new Particule(new Vecteur3D(800.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(-80.0, 0.0, 0.0), "C1"));
+  particules.add(new Particule(new Vecteur3D(900.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(80.0, 0.0, 0.0), "C2"));
   registreForces.ajouter(particules.get(8), generateurGravite);
-  generateursContact.add(new GenerateurContactCable(particules.get(7), particules.get(8), 120.0, 0.5));
+  registreForces.ajouter(particules.get(9), generateurGravite);
+  generateursContact.add(new GenerateurContactCable(particules.get(8), particules.get(9), 120.0, 0.5));
 
   // interpénétrations et contacts au repos entre les particules
   generateursContact.add(new GenerateurContactParticules(particules, 0.7));
