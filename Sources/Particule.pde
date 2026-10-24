@@ -1,6 +1,7 @@
 class Particule {
   public color couleur;
   public int rayon;
+  public String label = "";
   public Vecteur3D position;
   public Vecteur3D position_precedente;
   public Vecteur3D velocite = new Vecteur3D();
@@ -20,6 +21,11 @@ class Particule {
 
     set_masse(masse);
     couleur_aleatoire();
+  }
+
+  Particule(Vecteur3D position_initiale, int rayon, float masse, float damping, Vecteur3D velocite_initiale, String label) {
+    this(position_initiale, rayon, masse, damping, velocite_initiale);
+    this.label = label;
   }
 
   void set_masse(float nouvelle_masse) {
@@ -48,6 +54,10 @@ class Particule {
   }
 
   void integrer_euler(float temps) {
+    if (inverse_masse <= 0){ // éviter qu'un objet de masse infinie ne subisse des calculs inutiles
+      return;
+    }
+    
     acceleration = accumulateur_force.mult(inverse_masse);
 
     // v1 = v0 + a * dt sans damping
@@ -58,11 +68,11 @@ class Particule {
   }
 
   void integrer_verlet(float temps) {
-    Vecteur3D force = new Vecteur3D();
-    Vecteur3D g = new Vecteur3D(0.0, 200.0, 0.0);
-    force = g.mult(masse);
-    
-    acceleration = force.mult(inverse_masse);
+    if (inverse_masse <= 0){ // éviter qu'un objet de masse infinie ne subisse des calculs inutiles
+      return;
+    }
+
+    acceleration = accumulateur_force.mult(inverse_masse);;
     
     if (position_precedente == null){
       position_precedente = position.add(velocite.mult(-temps));
@@ -80,7 +90,15 @@ class Particule {
   void draw() {
     stroke(couleur);
     fill(couleur);
-    circle(position.x, position.y, rayon);
+    circle(position.x, position.y, rayon*2); // diamètre
+
+    // Dessin du texte au centre de la boule
+    if (label != null && !label.equals("")) {
+      fill(0);
+      textAlign(CENTER, CENTER);
+      textSize(12);
+      text(label, position.x, position.y);
+    }
   }
 
   float get_masse() {

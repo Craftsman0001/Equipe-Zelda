@@ -1,4 +1,4 @@
-class GenerateurRessort implements GenerateurDeForce {
+abstract class GenerateurRessort implements GenerateurDeForce {
 
   float longueur_repos = 50.0;
   float k = 100.0;

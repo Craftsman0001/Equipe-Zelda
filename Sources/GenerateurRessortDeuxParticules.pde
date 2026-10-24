@@ -18,15 +18,7 @@ class GenerateurRessortDeuxParticules extends GenerateurRessort{
 
     particule.ajouter_force(force_ressort);
 
-    Vecteur3D force_ressort2 = new Vecteur3D(particule.position);
-    force_ressort2 = force_ressort2.sub(autre_particule.position);
-
-    float stretch2 = force_ressort2.norme() - longueur_repos;
-
-    force_ressort2.normaliser();
-    force_ressort2 = force_ressort2.mult(k * stretch2);
-
-    autre_particule.ajouter_force(force_ressort2);
+    autre_particule.ajouter_force(force_ressort.mult(-1)); // D'après la 3e loi de Newton, la force exercée sur la deuxième particule est opposée à celle exercée sur la première
   }
 
   void dessiner(Particule p) {

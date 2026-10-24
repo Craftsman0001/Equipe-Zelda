@@ -36,19 +36,18 @@ class TestVecteur3D {
     
     // Cas standard
     Vecteur3D v3 = new Vecteur3D(5, 7, 9);
-    v3.sub(new Vecteur3D(1, 2, 3));
-    valider_test("Soustraction entre deux vecteurs positifs", v3.x == 4 && v3.y == 5 && v3.z == 6);
+    Vecteur3D res_sub = v3.sub(new Vecteur3D(1, 2, 3));
+    valider_test("Soustraction entre deux vecteurs positifs", res_sub.x == 4 && res_sub.y == 5 && res_sub.z == 6);
 
     // Edge case : Soustraction de nombres négatifs
     Vecteur3D v4 = new Vecteur3D(5, 7, 9);
-    v4.sub(new Vecteur3D(-2, -3, -4));
-    valider_test("Soustraction avec valeurs negatives", v4.x == 7 && v4.y == 10 && v4.z == 13);
+    Vecteur3D res_sub_neg = v4.sub(new Vecteur3D(-2, -3, -4));
+    valider_test("Soustraction avec valeurs negatives", res_sub_neg.x == 7 && res_sub_neg.y == 10 && res_sub_neg.z == 13);
 
     // Edge case : Soustraction avec le vecteur nul
-    // Edge case : Soustraction avec le vecteur nul
     Vecteur3D v5 = new Vecteur3D(1, 2, 3);
-    v5.sub(new Vecteur3D(0, 0, 0));
-    valider_test("Soustraction avec vecteur nul", v5.x == 1 && v5.y == 2 && v5.z == 3);
+    Vecteur3D res_sub_nul = v5.sub(new Vecteur3D(0, 0, 0));
+    valider_test("Soustraction avec vecteur nul", res_sub_nul.x == 1 && res_sub_nul.y == 2 && res_sub_nul.z == 3);
   }
 
   void tester_multiplication_scalaire() {

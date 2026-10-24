@@ -13,11 +13,11 @@ class GenerateurRessortBungee extends GenerateurRessort {
 
     float longuere_actuelle = force_ressort.norme();
 
-    if (longuere_actuelle < longueur_repos) {
+    if (longuere_actuelle <= longueur_repos) {
       return;
     } 
 
-    float stretch = force_ressort.norme() - longueur_repos;
+    float stretch = longuere_actuelle - longueur_repos;
 
     force_ressort.normaliser();
     force_ressort = force_ressort.mult(k * stretch);
