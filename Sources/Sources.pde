@@ -2,6 +2,11 @@
 // Config
 boolean utiliserVerlet = false; // true = Verlet ,  false = Euler
 
+// Paramètres des collisions
+final float SEUIL_REPOS = 40.0;
+final float FRICTION_MUR = 4.0;
+final float VITESSE_MAX = 400.0;
+
 ArrayList<Particule> particules = new ArrayList<Particule>();
 RegistreDeForces registreForces = new RegistreDeForces();
 GenerateurGravite generateurGravite;
@@ -10,6 +15,11 @@ GenerateurRessortAncreParticule generateurRessortAncreParticule;
 GenerateurAmortissement generateurAmortissement;
 GenerateurRessortDeuxParticules generateurRessortDeuxParticules;
 GenerateurRessortBungee generateurRessortBungee;
+
+// Collisions
+ArrayList<Contact> contacts = new ArrayList<Contact>();
+ArrayList<GenerateurContact> generateursContact = new ArrayList<GenerateurContact>();
+ResolveurContacts resolveurContacts = new ResolveurContacts(20, 20);
 
 // Gestion du temps
 int dernierTempsMillis;
@@ -31,26 +41,26 @@ void setup() {
   generateurFriction = new GenerateurFriction(0.5, 0.02);
   
   // particule avec gravité ("G")
-  particules.add(new Particule(new Vecteur3D(50.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "G"));
+  particules.add(new Particule(new Vecteur3D(50.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "G"));
   registreForces.ajouter(particules.get(0), generateurGravite);
   
   // particule avec ancre (ressort) + gravité + amortissement ("A")
-  particules.add(new Particule(new Vecteur3D(100.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "A"));
+  particules.add(new Particule(new Vecteur3D(100.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "A"));
   generateurRessortAncreParticule = new GenerateurRessortAncreParticule(new Vecteur3D(100.0, 100.0, 0.0), 50.0, 100.0);
   registreForces.ajouter(particules.get(1), generateurGravite);
   registreForces.ajouter(particules.get(1), generateurAmortissement);
   registreForces.ajouter(particules.get(1), generateurRessortAncreParticule);
 
-   // ressort entre deux particules + amortissement ("R1" et "R2")
-  particules.add(new Particule(new Vecteur3D(150.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "R1"));
-  particules.add(new Particule(new Vecteur3D(300.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "R2"));
+  // ressort entre deux particules + amortissement ("R1" et "R2")
+  particules.add(new Particule(new Vecteur3D(150.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "R1"));
+  particules.add(new Particule(new Vecteur3D(300.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "R2"));
   generateurRessortDeuxParticules = new GenerateurRessortDeuxParticules(particules.get(3), 50.0, 100.0);
   registreForces.ajouter(particules.get(2), generateurAmortissement);
   registreForces.ajouter(particules.get(3), generateurAmortissement);
   registreForces.ajouter(particules.get(2), generateurRessortDeuxParticules);
 
   // particule bungee + gravité + amortissement ("B")
-  particules.add(new Particule(new Vecteur3D(400.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "B"));
+  particules.add(new Particule(new Vecteur3D(400.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(), "B"));
   generateurRessortBungee = new GenerateurRessortBungee(new Vecteur3D(400.0, 100.0, 0), 50.0, 100.0);
   registreForces.ajouter(particules.get(4), generateurAmortissement);
   registreForces.ajouter(particules.get(4), generateurGravite);
@@ -60,6 +70,25 @@ void setup() {
   particules.add(new Particule(new Vecteur3D(75.0, 100.0, 0.0), 20, 20.0, 0.99, new Vecteur3D(), "F"));
   registreForces.ajouter(particules.get(5), generateurGravite);
   registreForces.ajouter(particules.get(5), generateurFriction);
+
+  // tige : deux particules gardent une distance fixe
+  particules.add(new Particule(new Vecteur3D(600.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D()));
+  particules.add(new Particule(new Vecteur3D(660.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D()));
+  registreForces.ajouter(particules.get(5), generateurGravite);
+  registreForces.ajouter(particules.get(6), generateurGravite);
+  generateursContact.add(new GenerateurContactTige(particules.get(5), particules.get(6), 60.0));
+
+  // câble : distance maximale entre deux particules
+  particules.add(new Particule(new Vecteur3D(800.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(-80.0, 0.0, 0.0)));
+  particules.add(new Particule(new Vecteur3D(900.0, 100.0, 0.0), 20, 20.0, 0.7, new Vecteur3D(80.0, 0.0, 0.0)));
+  registreForces.ajouter(particules.get(7), generateurGravite);
+  registreForces.ajouter(particules.get(8), generateurGravite);
+  generateursContact.add(new GenerateurContactCable(particules.get(7), particules.get(8), 120.0, 0.5));
+
+  // interpénétrations et contacts au repos entre les particules
+  generateursContact.add(new GenerateurContactParticules(particules, 0.7));
+  // bords de la fenêtre
+  generateursContact.add(new GenerateurContactMurs(particules, 0.0, width, 0.0, height, 0.5));
 }
 
 // Game Loop
@@ -103,7 +132,7 @@ void mousePressed() {
 void mettreAJourPhysique(float dtLocal) {
   for (int i = particules.size() - 1; i >= 0; i--) {
     Particule p = particules.get(i);
-     p.vider_accumulateur();
+    p.vider_accumulateur();
   }
 
   registreForces.appliquer_forces(dtLocal);
@@ -116,7 +145,15 @@ void mettreAJourPhysique(float dtLocal) {
       p.integrer_euler(dtLocal);
     }
   }
+
+  // Détection des collisions puis résolution par impulsions
+  contacts.clear();
+  for (GenerateurContact g : generateursContact) {
+    g.generer_contacts(contacts);
+  }
+  resolveurContacts.resoudre(contacts, dtLocal);
 }
+
 
 // Fonction générale appelé depuis la game loop
 void dessiner() {
@@ -143,4 +180,11 @@ void dessinerUI() {
 
 void dessinerForces() {
   registreForces.afficher_ressorts();
+
+  // Tiges et câbles
+  for (GenerateurContact g : generateursContact) {
+    if (g instanceof GenerateurContactLien) {
+      ((GenerateurContactLien) g).dessiner();
+    }
+  }
 }
