@@ -40,8 +40,11 @@ void setup() {
   size(1000, 600);
 
   // On effectue les tests avant d'exécuter le jeu
-  TestVecteur3D test = new TestVecteur3D();
-  test.executerTests();
+  TestVecteur3D test_vecteur_3D = new TestVecteur3D();
+  test_vecteur_3D.executerTests();
+  println();
+  TestPhase3 test_phase_3 = new TestPhase3();
+  test_phase_3.executerTests();
 
   dernierTempsMillis = millis();
   textAlign(LEFT, TOP);
