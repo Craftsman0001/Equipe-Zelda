@@ -19,7 +19,39 @@ class TestPhase3 {
     tester_matrix4_inversion();
     tester_matrix4_depuis_orientation_et_position();
 
+    // Tests CorpsRigide
+    tester_corps_rigide();
+
     println("\n--- FIN DES TESTS ---");
+  }
+
+  void tester_corps_rigide() {
+    println("\n>> CorpsRigide : Forces et integration");
+
+    // Cas standard : force au centre de masse -> translation sans rotation
+    CorpsRigide c = new CorpsRigide(new Vecteur3D(0, 0, 0), new Vecteur3D(2, 1, 1), 2.0, 1.0, 1.0);
+    c.ajouter_force(new Vecteur3D(10, 0, 0));
+    c.integrer_euler(0.1);
+    valider_test("Force au centre : translation", abs(c.velocite.x - 0.5) < 0.001 && c.position.x > 0);
+    valider_test("Force au centre : aucune rotation", c.velocite_angulaire.norme() == 0);
+
+    // Cas standard : force décentrée -> rotation autour de Z (r = +X, F = +Y donc torque = +Z)
+    CorpsRigide c2 = new CorpsRigide(new Vecteur3D(0, 0, 0), new Vecteur3D(2, 1, 1), 2.0, 1.0, 1.0);
+    c2.ajouter_force_au_point(new Vecteur3D(0, 10, 0), new Vecteur3D(1, 0, 0));
+    c2.integrer_euler(0.1);
+    valider_test("Force decentree : rotation autour de +Z", c2.velocite_angulaire.z > 0 && abs(c2.velocite_angulaire.x) < 0.001);
+
+    // Edge case : quaternion toujours normalisé après de nombreux pas
+    for (int i = 0; i < 5000; i++) {
+      c2.integrer_euler(0.016);
+    }
+    valider_test("Quaternion normalise apres 5000 pas", abs(c2.orientation.norme() - 1.0) < 0.001);
+
+    // Edge case : masse nulle -> objet immobile
+    CorpsRigide fixe = new CorpsRigide(new Vecteur3D(0, 0, 0), new Vecteur3D(1, 1, 1), 0.0, 1.0, 1.0);
+    fixe.ajouter_force_au_point(new Vecteur3D(0, 10, 0), new Vecteur3D(1, 0, 0));
+    fixe.integrer_euler(0.1);
+    valider_test("Masse nulle : immobile", fixe.position.norme() == 0 && fixe.velocite_angulaire.norme() == 0);
   }
 
   void tester_quaternion_normalisation() {
